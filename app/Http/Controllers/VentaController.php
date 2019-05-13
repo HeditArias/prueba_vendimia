@@ -5,6 +5,7 @@ namespace App\Http\Controllers;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\DB;
 use Carbon\Carbon;
+use App\Item;
 use App\Venta;
 use App\DetalleVenta;
 
@@ -51,7 +52,13 @@ class VentaController extends Controller
                 $detalle->importe = $det['importe'];
                 $detalle->descuento = 0;        
                 $detalle->save();
-            }       
+
+                $firstUser = Item::find($det['id_articulo']); 
+                $firstUser->decrement('existence', $det['cantidad']); 
+            }      
+
+            
+
             DB::commit();
             return [
                 'id' => $venta->id
